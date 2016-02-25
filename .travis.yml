@@ -16,12 +16,12 @@ matrix:
 
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
-  - sudo chown -R $USER $(brew --repo)
   - git -C $(brew --repo) reset --hard origin/master
   - git -C $(brew --repo) clean -qxdff
   - brew tap homebrew/dupes
   - brew tap homebrew/versions
   - brew update
+  - sudo chown -R $USER $(brew --repo)
   - ln -s $PWD $(brew --repo)/Library/Taps/larseggert/homebrew-mytap
   - cd $(brew --repo)/Library/Taps/larseggert/homebrew-mytap
   - export TRAVIS_BUILD_DIR="$(brew --repo)/Library/Taps/larseggert/homebrew-mytap"
