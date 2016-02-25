@@ -1,69 +1,34 @@
-language: ruby
+language: objective-c
 matrix:
   include:
     - env: OSX=10.11
       os: osx
-      osx_image: xcode7.2
+      osx_image: osx10.11
       rvm: system
     - env: OSX=10.10
       os: osx
-      osx_image: xcode7.1
+      osx_image: xcode7
       rvm: system
-    - env: OSX=10.9 HOMEBREW_RUBY=1.8.7
+    - env: OSX=10.9
       os: osx
       osx_image: beta-xcode6.2
       rvm: system
-    - os: linux
-      rvm: system
-      services: docker
-      sudo: required
-  allow_failures:
-    - os: linux
 
 before_install:
-  - if [ -f ".git/shallow" ]; then
-      travis_retry git fetch --unshallow;
-    fi
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      sudo chown -R "$USER" "$(brew --repo)";
-      git -C "$(brew --repo)" reset --hard origin/master;
-      git -C "$(brew --repo)" clean -qxdff;
-      brew update || brew update;
-      mkdir -p "$(brew --repo)/Library/Taps/homebrew";
-      ln -s "$TRAVIS_BUILD_DIR" "$(brew --repo)/Library/Taps/larseggert/homebrew-mytap";
-      cd "$(brew --repo)/Library/Taps/larseggert/homebrew-mytap";
-      export TRAVIS_BUILD_DIR="$(brew --repo)/Library/Taps/larseggert/homebrew-mytap";
-    fi
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      docker pull sjackman/linuxbrew-standalone;
-      docker run
-        -v $(pwd):/home/linuxbrew/homebrew-science
-        sjackman/linuxbrew-standalone
-        /bin/sh -c 'brew tap homebrew/python && brew update && cp -rf ~/homebrew-science $(brew --repo)/Library/Taps/larseggert/homebrew-mytap';
-      docker commit $(docker ps -l -q) linuxbrew;
-    fi
-  - env | grep TRAVIS | tee /tmp/travis.env
-
-install:
-  - if [ "$HOMEBREW_RUBY" = "1.8.7" ]; then
-      brew install homebrew/versions/ruby187;
-      export HOMEBREW_RUBY_PATH="/usr/local/opt/ruby187/bin/ruby";
-      brew untap homebrew/versions;
-    fi
-  - export HOMEBREW_DEVELOPER="1"
-  - ulimit -n 1024
+  - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
+  - sudo chown -R $USER $(brew --repo)
+  - git -C $(brew --repo) reset --hard origin/master
+  - git -C $(brew --repo) clean -qxdff
+  - brew tap homebrew/dupes
+  - brew tap homebrew/versions
+  - brew update
+  - ln -s $PWD $(brew --repo)/Library/Taps/larseggert/homebrew-mytap
+  - cd $(brew --repo)/Library/Taps/larseggert/homebrew-mytap
+  - export TRAVIS_BUILD_DIR="$(brew --repo)/Library/Taps/larseggert/homebrew-mytap"
+  - env | grep TRAVIS_
 
 script:
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      brew test-bot;
-    else
-      docker run
-        -w /home/linuxbrew/.linuxbrew/Library/Taps/larseggert/homebrew-mytap
-        --env-file /tmp/travis.env
-        -t
-        linuxbrew
-        brew test-bot --tap=larseggert/homebrew-mytap;
-    fi
+  - brew test-bot
 
 notifications:
   email:
