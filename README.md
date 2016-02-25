@@ -1,5 +1,7 @@
 # homebrew-mytap
 
+![Travis status](https://travis-ci.org/larseggert/homebrew-mytap.svg?branch=master)
+
 These formulæ provide software that I need, but didn't make it into the main
 homebrew distribution, for some reason.
 
