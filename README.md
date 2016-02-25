@@ -1,4 +1,4 @@
-# larseggert/homebrew-mytap
+# homebrew-mytap
 
 These formulæ provide software that I need, but didn't make it into the main
 homebrew distribution, for some reason.
