@@ -5,7 +5,7 @@ class Banal < Formula
   version "1.2.2"
   sha256 "4cbb4bf2c29b05329ea2e94039e6643585c7be387e2c95c40ac41ecde64c24ad"
 
-  depends_on "poppler"
+  depends_on "pdftohtml"
 
   def install
     bin.install "banal"
