@@ -11,6 +11,7 @@ class Sfuzz < Formula
       s.gsub! %r{/usr/local/include}, "/usr/local/include /usr/local/opt/openssl/include"
       s.gsub! %r{/usr/local/lib}, "/usr/local/lib /usr/local/opt/openssl/lib"
     end
+    inreplace "os-abs.c", %r{MAX\(100, opts->time_out\)}, "opts->time_out"
 
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"
